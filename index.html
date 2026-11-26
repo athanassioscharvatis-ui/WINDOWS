@@ -66,7 +66,7 @@ let mode="home",path=["Αυτός ο υπολογιστής"],explorerHistory=[[
 const $=id=>document.getElementById(id);
 function iconFor(name){return folders.find(x=>x.name===name)?.icon||sortItems.find(x=>x.name===name)?.icon||"📄"}
 function toggleSetting(cls){document.body.classList.toggle(cls);const ids={"large-text":"textToggle","high-contrast":"contrastToggle","calm":"calmToggle"};$(ids[cls]).setAttribute("aria-pressed",document.body.classList.contains(cls))}
-function speak(text){if(!("speechSynthesis" in window)){announce("Η εκφώνηση δεν είναι διαθέσιμη σε αυτή τη συσκευή.");return}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text||"Μαθαίνω τα Windows, ένα βήμα τη φορά.");utterance.lang="el-GR";speechSynthesis.speak(utterance)}
+function speak(text){if(!( "speechSynthesis" in window)||!("SpeechSynthesisUtterance" in window)){announce("Η εκφώνηση δεν είναι διαθέσιμη σε αυτή τη συσκευή.");return}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(text||"Μαθαίνω τα Windows, ένα βήμα τη φορά.");utterance.lang="el-GR";const voices=speechSynthesis.getVoices();const greekVoice=voices.find(voice=>voice.lang.toLowerCase().startsWith("el"));if(greekVoice)utterance.voice=greekVoice;speechSynthesis.speak(utterance)}
 function speakCurrent(){const main=$("main");const text=main.innerText.replace(/\s+/g," ").trim();speak(text)}function stopSpeech(){if("speechSynthesis" in window)speechSynthesis.cancel()}
 function announce(text){const live=$("liveStatus");if(live)live.textContent=text}
 function setMode(next){stopSpeech();mode=next;document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.mode===mode));render();$("main").focus({preventScroll:true})}
